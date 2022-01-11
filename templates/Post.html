@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital@1&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital@1&display=swap" rel="stylesheet">
+    <title>Hello, world!</title>
+    <style>
+        body {
+            background-color: #161616;
+        }
+
+        .text {
+            opacity: 0.5;
+            font-family: 'Nunito Sans', sans-serif;
+            user-select: none;
+        }
+
+        .profile-card-2:hover img {
+            cursor: pointer;
+            filter: grayscale(100%);
+        }
+        ::-webkit-scrollbar-thumb{
+            background: linear-gradient(transparent, white);
+            border-radius: 7px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container d-flex justify-content-center">
+        <div class="profile-card-2 mt-3"><img src={{post.image.url}}
+                style="width: 300px; border-radius: 50%; user-select: none;" alt=""></div>
+    </div>
+
+
+
+    <form action="#">
+        {% csrf_token %}
+        {% if user.is_authenticated %}
+        <a onclick="ColorChan()" type="button" , id="submit" name="post_id" , value="{{post.srn}}"
+            class="container d-flex justify-content-center  mt-1"
+            style="background-color: #161616; width: 28px; cursor: pointer; user-select: none; border: none;"><img
+                id="like" style="background-color: {% if user in post.like.all %} red {% else %} #161616{% endif %};"
+                class="rounded-circle" src="https://img.icons8.com/pastel-glyph/25/000000/like--v3.png" />
+        </a>
+        {% else %}
+        <div class="container d-flex justify-content-center"><img onclick="Oyoo()" class="rounded-circle mt-2"
+                src="https://img.icons8.com/pastel-glyph/25/000000/like--v3.png" /></div>
+        {% endif %}
+        <input type="hidden" id="Pid" value="{{post.slug}}">
+    </form>
+
+
+
+    <div class="container d-flex justify-content-center">
+        <h6 id="likesId" class="mx-1 text-light" style="font-family: 'Ubuntu Mono', monospace; user-select: none;">
+            {{post.like.all | length}}</h6>
+    </div>
+    <div class="container d-flex justify-content-center">
+        <h5 style="font-family: 'Ubuntu Mono', monospace; user-select: none;" class="text-light">{{post.name}}</h5>
+    </div>
+
+    <div class="container text-center mt-2">
+        <p class="text text-light">{{post.content}}</p>
+    </div>
+
+
+    <div class="container d-flex justify-content-center mt-5 " style="user-select: none; opacity: 0.7;">
+        <div>
+            <img src="https://img.icons8.com/color/48/000000/facebook-new.png" />
+        </div>
+
+        <div>
+            <img src="https://img.icons8.com/color/48/000000/twitter--v1.png" />
+        </div>
+        <div>
+            <img src="https://img.icons8.com/fluency/48/000000/instagram-new.png" />
+        </div>
+
+    </div>
+    <!-- Optional JavaScript -->
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>\
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+
+    <script>
+
+        function ColorChan() {
+            document.getElementById('like').style.backgroundColor = 'red';
+        }
+        function Oyoo() {
+            alert("You need to join with us for leave a massage, Go to our home page and Join Us.....!");
+        }
+
+        $('#submit').click(function () {
+
+            var user = $('#user').val();
+            var Pid = $('#Pid').val();
+            let csrftoken = $('input[name=csrfmiddlewaretoken]').val();
+
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'Story_App:like' %}",
+                dataType: 'json',
+                data: {
+                    csrfmiddlewaretoken: csrftoken,
+                    Pid: Pid,
+                },
+                success: function (response) {
+                    console.log(response);
+                    $("#likesId").html(response['likes']);
+                }
+            });
+        });
+
+
+    </script>
+</body>
+
+</html>
