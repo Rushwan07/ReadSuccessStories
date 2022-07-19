@@ -24,7 +24,7 @@
     integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
 
-  <title>Hello, world!</title>
+  <title>Success | World</title>
   <style>
     body {
       padding: 0;
@@ -33,6 +33,7 @@
       width: 100%;
       background: #07051a;
     }
+
 
     form {
       position: relative;
@@ -795,47 +796,23 @@
     .profile-card-10:hover img {
       transform: scale(1.1);
     }
+
+    
+    .fvr:hover{
+      cursor: pointer;
+     color: #74AB34;
+    }
   </style>
+  <script src="https://kit.fontawesome.com/e2d637a111.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-  <header>
-    <div class="container text-center">
-
-      <!-- Logo -->
-      <div class="logo">
-        <h1 class="font-family: 'Inconsolata', monospace;" style="user-select: none;"><b>Successfull People Stories
-          </b></h1>
-      </div>
-
-      <h1 class="font-family: 'Inconsolata', monospace;" style="user-select: none;">Read The Success Stories,
-        Motivations
-      </h1>
-      <form action="{% url 'Story_App:search' %}" method="get" class="mt-2 font-family: 'Inconsolata', monospace;">
-        <input type="search" name="quary" id="quary" required placeholder="Search You'r Hero..">
-        <i class="fa fa-search"></i>
-        <a href="javascript:void(0)" id="clear-btn">Clear</a>
-      </form>
-    </div>
-    <!-- Button trigger modal -->
-
-  </header>
-  <div>
-    <h1 class="container d-flex justify-content-center">{{y}}</h1>
-  </div>
-  {% if true != t %}
-  <div class="container d-flex justify-content-center">
-    <p><b>Sugessions:</b></p><br>
-    <h6 class="ml-5">Elon Must story</h6>
-    <h6 class="ml-5">Billgates Story</h6>
-    <h6 class="ml-5">Steve Jobs</h6>
-  </div>
-
-  {% endif %}
+  
+    <h1 class="d-flex justify-content-center">{{Text}}</h1>
+ 
   <div class="container">
     <div class="row">
       {% for post in Allpost %}
-
       <div class="col-md-4" onclick="openWindow('{{post.slug}}')">
         <!-- <h4 class="text-center"><strong>STYLE 1</strong></h4> -->
         <hr>
@@ -851,21 +828,11 @@
     </div>
   </div>
 
+ 
 
 
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script>
 
-    const clearInput = () => {
-      const input = document.getElementsByTagName("input")[0];
-      input.value = "";
-    }
-
-    const clearBtn = document.getElementById("clear-btn");
-    clearBtn.addEventListener("click", clearInput);
-
-
-  </script>
 
 
 
@@ -879,6 +846,7 @@
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
   <script>
+  
     function SearchBtn() {
       console.log("Working");
       document.getElementById("search").style.border = "none";

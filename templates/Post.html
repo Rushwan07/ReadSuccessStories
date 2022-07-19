@@ -36,26 +36,41 @@
             cursor: pointer;
             filter: grayscale(100%);
         }
-        ::-webkit-scrollbar-thumb{
+
+        ::-webkit-scrollbar-thumb {
             background: linear-gradient(transparent, white);
             border-radius: 7px;
         }
     </style>
+    <script src="https://kit.fontawesome.com/e2d637a111.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
+    <form action="#">
+        {% csrf_token %}
+        {% if user.is_authenticated %}
+        <div>
+            <a type="button" id="savepost" class="fa-solid fa-bookmark fa-2x p-2" style="color: {% if user in post.Favourite.all %} red {% else %} white {% endif %}; cursor: pointer;"></a>
+        </div>
+        {% else %}
+        <div>
+            <i class="fa-solid fa-bookmark fa-2x p-2" style="color: white;"></i>
+        </div>
+        {% endif %}
+        <input type="hidden" id="Sid" value="{{post.slug}}">
+    </form>
 
     <div class="container d-flex justify-content-center">
         <div class="profile-card-2 mt-3"><img src={{post.image.url}}
                 style="width: 300px; border-radius: 50%; user-select: none;" alt=""></div>
     </div>
 
-
-
+    
+   
     <form action="#">
         {% csrf_token %}
         {% if user.is_authenticated %}
-        <a onclick="ColorChan()" type="button" , id="submit" name="post_id" , value="{{post.srn}}"
+        <a type="button" , id="submit" name="post_id" , value="{{post.srn}}"
             class="container d-flex justify-content-center  mt-1"
             style="background-color: #161616; width: 28px; cursor: pointer; user-select: none; border: none;"><img
                 id="like" style="background-color: {% if user in post.like.all %} red {% else %} #161616{% endif %};"
@@ -77,9 +92,11 @@
     <div class="container d-flex justify-content-center">
         <h5 style="font-family: 'Ubuntu Mono', monospace; user-select: none;" class="text-light">{{post.name}}</h5>
     </div>
-
+     <div class="container d-flex justify-content-center">
+        <h5 style="font-family: 'Ubuntu Mono', monospace; user-select: none;" class="text-light">{{post.views.all | length}} Views</h5>
+    </div>
     <div class="container text-center mt-2">
-        <p class="text text-light">{{post.content}}</p>
+        <p class="text text-light text-justify">{{post.content}}</p>
     </div>
 
 
@@ -115,11 +132,8 @@
 
     <script>
 
-        function ColorChan() {
-            document.getElementById('like').style.backgroundColor = 'red';
-        }
         function Oyoo() {
-            alert("You need to join with us for leave a massage, Go to our home page and Join Us.....!");
+            alert("You need to join with us for leave a Like, Go to our home page and Join Us.....!");
         }
 
         $('#submit').click(function () {
@@ -138,13 +152,46 @@
                 },
                 success: function (response) {
                     console.log(response);
+                    if (response['likeStatus'] == true) {
+                        document.getElementById('like').style.backgroundColor = 'red';
+                    }
+                    else {
+                        document.getElementById('like').style.backgroundColor = '#161616';
+                    }
                     $("#likesId").html(response['likes']);
                 }
             });
         });
 
+       $('#savepost').click(function(){
+            var Pid = $('#Sid').val();
+            let csrftoken = $('input[name=csrfmiddlewaretoken]').val();
+
+            $.ajax({
+                type : 'POST',
+                url: "{% url 'Story_App:fvr' %}",
+                dataType: 'json',
+                data: {
+                    csrfmiddlewaretoken: csrftoken,
+                    Pid: Pid,
+                },
+
+                success: function (response) {
+                    console.log(response);
+                    if (response['saveStatus'] == true) {
+                        document.getElementById('savepost').style.color = 'red';
+                    }
+                    else {
+                        document.getElementById('savepost').style.color = 'white';
+                    }
+                    $("#likesId").html(response['savepost']);
+                }
+            });
+
+       });
 
     </script>
+   
 </body>
 
 </html>

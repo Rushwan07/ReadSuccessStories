@@ -24,7 +24,7 @@
     integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
 
-  <title>Hello, world!</title>
+  <title>Success | World</title>
   <style>
     body {
       padding: 0;
@@ -66,20 +66,20 @@
       padding: 0 20px;
     }
 
-   .fa{
-    box-sizing: border-box;
-    padding: 10px;
-    width: 42.5px;
-    height: 42.5px;
-    position: absolute;
-    top: 0;
-    right: 0;
-    border-radius: 50%;
-    color: #07051a;
-    text-align: center;
-    font-size: 1.2em;
-    transition: all 1s;
-}
+    .fa {
+      box-sizing: border-box;
+      padding: 10px;
+      width: 42.5px;
+      height: 42.5px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      border-radius: 50%;
+      color: #07051a;
+      text-align: center;
+      font-size: 1.2em;
+      transition: all 1s;
+    }
 
     form:hover,
     form:valid {
@@ -796,7 +796,14 @@
     .profile-card-10:hover img {
       transform: scale(1.1);
     }
+
+    
+    .fvr:hover{
+      cursor: pointer;
+     color: #74AB34;
+    }
   </style>
+  <script src="https://kit.fontawesome.com/e2d637a111.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -809,7 +816,8 @@
           </b></h1>
       </div>
 
-      <h1 class="font-family: 'Inconsolata', monospace;" style="user-select: none;">Read The Success Stories Of The Successfull Persons
+      <h1 class="font-family: 'Inconsolata', monospace;" style="user-select: none;">Read The Success Stories Of The
+        Successfull Persons
       </h1>
       <form action="{% url 'Story_App:search' %}" method="get" class="mt-2 font-family: 'Inconsolata', monospace;">
         <input type="search" name="quary" id="quary" required placeholder="Search You'r Hero..">
@@ -819,10 +827,11 @@
 
 
       {% if user.is_authenticated %}
-     
-      
-        <button href="logout/" onclick="leave()" type="button" class="btn btn-primary mt-5">{{request.user}} Exit Here</button>
-     
+
+
+      <button href="logout/" onclick="leave()" type="button" class="btn btn-primary mt-5">{{request.user}} Exit
+        Here</button>
+
       {% else %}
       <button onclick="JoinUs()" type="button" class="btn btn-primary mt-4">Join Us</button>
       {% endif %}
@@ -830,7 +839,11 @@
     <!-- Button trigger modal -->
 
   </header>
-
+  {% if user.is_authenticated %}
+  <div class="fvr" style="position: fixed; top: 87%; z-index: 1;">
+    <div onclick="SaveLink()" class="ml-3 fa-solid fa-bookmark fa-2x p-2"></div>
+  </div>
+  {% endif %}
   <div class="container">
     <div class="row">
       {% for post in Allpost %}
@@ -849,7 +862,7 @@
     </div>
   </div>
 
-   {% for message in messages %}
+  {% for message in messages %}
   <div class="alert alert-{{ message.tags }}  alert-dismissible fade show" role="alert">
     <strong>Message : </strong> {{ message }}
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -885,6 +898,9 @@
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
   <script>
+    function SaveLink() {
+      window.open('SavePost/', '_self');
+    }
     function SearchBtn() {
       console.log("Working");
       document.getElementById("search").style.border = "none";

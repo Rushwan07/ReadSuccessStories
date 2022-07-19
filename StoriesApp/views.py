@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post
+from .models import Post, Viewers
 
 
 # Create your views here.
@@ -16,24 +16,62 @@ def index(request):
 
 def post(request, slug):
     post = Post.objects.filter(slug=slug).first()
-    print(request.user)
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for is not None:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+
+    if Viewers.objects.filter(ipslug=ip).count() == 0:
+        ipc = Viewers(ipslug=ip)
+        ipc.save()
+    else:
+        ipc = Viewers.objects.filter(ipslug=ip).first()
+
+    if ipc not in post.views.all():
+        post.views.add(ipc)
+    print("Views::",post.views.all().count())
     context = {'post': post}
     return render(request, 'Post.html', context)
 
 
 def like(request):
     if request.method == 'POST':
+        likeStatus = False
         post = get_object_or_404(Post, slug=request.POST.get('Pid'))
-        likes = post.like.add(request.user)
+        if request.user in post.like.all():
+            post.like.remove(request.user)
+            likeStatus = False
+        else:
+            post.like.add(request.user)
+            likeStatus = True
         count = post.like.all().count()
-        print(count)
         # id = request.POST.get('Pid')
         # print(id)
         # if Post.objects.filter(slug=id).exists:
         #     like = Post.like.add(request.user)
         return JsonResponse({
             'status': True,
+            'likeStatus': likeStatus,
             'likes': count
+        })
+
+
+def favourite(request):
+    if request.method == 'POST':
+        saveStatus = False
+        post = get_object_or_404(Post, slug=request.POST.get('Pid'))
+
+        if request.user in post.Favourite.all():
+            post.Favourite.remove(request.user)
+            saveStatus = False
+        else:
+            post.Favourite.add(request.user)
+            saveStatus = True
+
+        return JsonResponse({
+            'status': True,
+            'saveStatus': saveStatus,
         })
 
 
@@ -86,9 +124,21 @@ def search(request):
         Allpostcontent = Post.objects.filter(content__icontains=quary)
         Allpost = AllpostName.union(Allpostcontent)
     if Allpost.count() == 0:
-        y = "Result Not Found"
+        y = "No Result Found"
         t = "t"
         params = {'y': y, 'true': t}
         return render(request, "search.html", params)
     params = {'Allpost': Allpost, 'quary': quary}
     return render(request, 'search.html', params)
+
+
+def SavePost(request):
+    post = Post.objects.filter(Favourite=request.user)
+    if not Post.objects.filter(Favourite=request.user):
+
+        text = 'Zero Stories in your Favourite List'
+        context = {'Text': text}
+        return render(request, 'Fvr.html', context)
+    context = {'Allpost': post}
+
+    return render(request, 'Fvr.html', context)
