@@ -13,26 +13,28 @@ def index(request):
     context = {'Allpost': Allpost}
     return render(request, 'FirstPage.html', context)
 
-
 def post(request, slug):
-    post = Post.objects.filter(slug=slug).first()
+    post = get_object_or_404(Post, slug=slug)
+
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for is not None:
-        ip = x_forwarded_for.split(',')[0]
+
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0].strip()
     else:
         ip = request.META.get('REMOTE_ADDR')
 
-    if Viewers.objects.filter(ipslug=ip).count() == 0:
-        ipc = Viewers(ipslug=ip)
-        ipc.save()
-    else:
-        ipc = Viewers.objects.filter(ipslug=ip).first()
+    if ip:
+        ipc, created = Viewers.objects.get_or_create(ipslug=ip)
 
-    if ipc not in post.views.all():
-        post.views.add(ipc)
-    print("Views::",post.views.all().count())
+        if not post.views.filter(id=ipc.id).exists():
+            post.views.add(ipc)
+
+    print("Views:", post.views.count())
+
     context = {'post': post}
     return render(request, 'Post.html', context)
+
+
 
 
 def like(request):
